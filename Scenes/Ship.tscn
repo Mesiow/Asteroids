@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scripts/Ship.gd" type="Script" id=1]
+[ext_resource path="res://Sprites/ship.png" type="Texture" id=2]
+
+[node name="Ship" type="KinematicBody2D"]
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="."]
+rotation = 1.5708
+scale = Vector2( 0.2, 0.2 )
+texture = ExtResource( 2 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PoolVector2Array( -14.3872, -25.0472, -13.7946, -25.0472, 5.1684, -25.0472, 5.1684, -18.5287, 14.6499, -18.5287, 14.3536, -11.4176, 17.6128, -7.86202, 26.5017, -4.89905, 26.798, 3.69354, 17.3166, 7.54539, 14.9462, 17.6195, 5.4647, 25.6195, -14.6834, 25.6195, -17.6464, 17.6195, -26.8316, 6.6565, -26.8316, -6.97313, -17.3501, -18.825 )
+
+[node name="Muzzle" type="Position2D" parent="."]
+position = Vector2( 32, 0 )
+
+[node name="ShootTimer" type="Timer" parent="."]
+wait_time = 0.3
+[connection signal="timeout" from="ShootTimer" to="." method="_on_ShootTimer_timeout"]
