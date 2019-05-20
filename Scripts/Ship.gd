@@ -1,4 +1,4 @@
-extends KinematicBody2D
+extends Area2D
 
 export var acceleration=Vector2()
 export var velocity=Vector2()
@@ -58,16 +58,15 @@ func shoot():
 	bullet.global_position=$Muzzle.global_position
 	get_tree().get_root().add_child(bullet)
 	add_to_group("Bullets")
+	$ShipLaser.play()
 	pass
 
 func _on_ShootTimer_timeout():
 	okToFire=true
 	pass 
 	
-func processCollision():
-	#var bullets = get_groups().find("Bullets")
-	var asteroids=get_groups().find("Asteroids")
-	
-	pass
-	
 
+func _on_Ship_body_entered(body):
+	if body.is_in_group("Asteroids"):
+		queue_free() #if we hit an asteroid
+	pass

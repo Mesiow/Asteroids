@@ -3,7 +3,7 @@ extends RigidBody2D
 
 export var velocity=Vector2()
 var rot
-var destroyAsteroidScale=Vector2(0.1, 0.1)
+var scaleToDestroy=Vector2(0.3, 0.3)
 
 signal breakAsteroid(asteroidHit)
 
@@ -34,8 +34,20 @@ func _process(delta):
 	pass
 	
 func spawn():
-	randomize()
-	global_position=getRandomPos()
+	#global_position=getRandomPos()
+	print(global_position)
+	
+	#get random rotation value
+	rot=getRandomRotation()
+	
+	#random velocity
+	velocity=getRandomVel()
+	add_to_group("Asteroids") #add to the group
+	pass
+	
+func spawnAsteroid(pos, size):
+	global_position=pos
+	global_scale = size * 0.5
 	
 	#get random rotation value
 	rot=getRandomRotation()
@@ -43,53 +55,40 @@ func spawn():
 	#random velocity
 	velocity=getRandomVel()
 	
-	add_to_group("Asteroids") #add to the group
-	pass
-	
-func spawnBrokenBits(pos):
-	randomize()
-	global_position=pos
-	
-	rot=getRandomRotation()
-	
-	velocity=getRandomVel()
-	
-	scale=Vector2(scale.x - 0.3, scale.y - 0.3)
-	
-	add_to_group("Asteroids_Child")
+	add_to_group("Asteroids")
 	pass
 
+
 func _on_Asteroid_body_entered(body):
-	if body.is_in_group("Ship"):
-		body.queue_free() #destroy ship
+
 	pass 
 
 
 func breakApart():
+	var HUDNode=get_tree().get_root().get_node("/root/World").HUD
+	HUDNode.get_node("Score").score+=20
+	
 	var asteroidHit=self
-	emit_signal("breakAsteroid", asteroidHit)
-	scale = Vector2(scale.x - 0.2, scale.y - 0.2)
-	
-	if scale < destroyAsteroidScale:#destroy the asteroid because it became too small
-		queue_free() 
+	if scale <= scaleToDestroy:
+		print("deleted")
+		queue_free() #delete tiny asteroids
 		return
-	
-	rot=getRandomRotation()
+		
+	emit_signal("breakAsteroid", asteroidHit) #emit signal
+	queue_free() #delete main asteroid
 	pass
 	
 func getRandomRotation():
-	var r=rand_range(-0.1, 0.1)
-	return r
+	randomize()
+	return rand_range(-0.1, 0.1)
 	pass
 	
 func getRandomVel():
-	var randX=rand_range(1, 100)
-	var randY=rand_range(1, 100)
-	return Vector2(randX, randY)
+	randomize()
+	return Vector2(rand_range(1, 100), rand_range(1, 100))
 	pass
 	
 func getRandomPos():
-	var randPosX=rand_range(0, get_viewport_rect().size.x)
-	var randPosY=rand_range(0, get_viewport_rect().size.y)
-	return Vector2(randPosX, randPosY)
+	randomize()
+	return Vector2(rand_range(0, get_viewport_rect().size.x), rand_range(0, get_viewport_rect().size.y))
 	pass

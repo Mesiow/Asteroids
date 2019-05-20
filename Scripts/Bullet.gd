@@ -22,7 +22,7 @@ func _on_VisibilityNotifier2D_screen_exited(): #remove bullet
 
 
 func _on_Bullet_body_entered(body):
-	if body.is_in_group("Asteroids") or body.is_in_group("Asteroids_Child"):
+	if body.is_in_group("Asteroids"):
 		body.breakApart() #asteroid break apart function
 		queue_free() #remove bullet that hit
 	pass # Replace with function body.
