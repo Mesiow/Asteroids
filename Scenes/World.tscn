@@ -28,7 +28,7 @@ z_index = 5
 position = Vector2( 32, 32 )
 
 [node name="AsteroidSpawnTimer" type="Timer" parent="."]
-wait_time = 5.0
+wait_time = 3.0
 
 [node name="AsteroidSpawnPath" type="Path2D" parent="."]
 position = Vector2( 0, -32 )
@@ -36,4 +36,5 @@ scale = Vector2( 1, 1.05263 )
 curve = SubResource( 1 )
 
 [node name="PathFollow2D" type="PathFollow2D" parent="AsteroidSpawnPath"]
+position = Vector2( -32, 0 )
 [connection signal="timeout" from="AsteroidSpawnTimer" to="." method="_on_AsteroidSpawnTimer_timeout"]

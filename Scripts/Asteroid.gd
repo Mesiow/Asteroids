@@ -5,6 +5,8 @@ export var velocity=Vector2()
 var rot
 var scaleToDestroy=Vector2(0.3, 0.3)
 
+const Explosion=preload("res://Scenes/Explosion.tscn")
+
 signal breakAsteroid(asteroidHit)
 
 func _ready():
@@ -34,9 +36,6 @@ func _process(delta):
 	pass
 	
 func spawn():
-	#global_position=getRandomPos()
-	print(global_position)
-	
 	#get random rotation value
 	rot=getRandomRotation()
 	
@@ -60,13 +59,18 @@ func spawnAsteroid(pos, size):
 
 
 func _on_Asteroid_body_entered(body):
-
 	pass 
 
 
 func breakApart():
-	var HUDNode=get_tree().get_root().get_node("/root/World").HUD
+	var worldNode=get_tree().get_root().get_node("/root/World")
+	var HUDNode=worldNode.HUD
 	HUDNode.get_node("Score").score+=20
+	
+	#emit particles
+	var explosion=Explosion.instance()
+	explosion.spawn(global_position)
+	worldNode.add_child(explosion)
 	
 	var asteroidHit=self
 	if scale <= scaleToDestroy:

@@ -3,8 +3,10 @@ extends Node
 var HUD setget, getHUD
 
 const Asteroid=preload("res://Scenes/Asteroid.tscn")
+const Restart=preload("res://Scenes/RestartScene.tscn")
 
 func _ready():
+	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 	spawnAsteroid()
 	$AsteroidSpawnTimer.start()
 	pass
@@ -51,6 +53,11 @@ func break_Asteroid_Received(asteroidHit):
 	
 	call_deferred("add_child", newAsteroids[0]) #stops game from freezing when adding new asteroids to the scene
 	call_deferred("add_child", newAsteroids[1])
+	pass
+	
+func player_Died_Received():
+	var restart=Restart.instance()
+	add_child(restart)
 	pass
 	
 func getHUD():

@@ -4,12 +4,21 @@ export var acceleration=Vector2()
 export var velocity=Vector2()
 var speed=50
 var okToFire=true
+signal died
 
+const Crosshair=preload("res://Scenes/Crosshair.tscn")
 const Bullet=preload("res://Scenes/Bullet.tscn")
+const Explosion=preload("res://Scenes/Explosion.tscn")
 
 func _ready():
 	set_process(true)
 	set_process_input(true)
+	
+	var worldNode=get_tree().get_root().get_node("/root/World")
+	self.connect("died", worldNode, "player_Died_Received")
+	
+	var crossHair=Crosshair.instance()
+	add_child(crossHair) #so it does not rotate with the ship
 	add_to_group("Ship")
 	pass 
 
@@ -50,6 +59,7 @@ func _input(event):
 	if Input.is_action_pressed("Right"):
 		acceleration.x+=0.5
 		velocity.x=speed * acceleration.x
+	
 	pass
 	
 func shoot():
@@ -68,5 +78,11 @@ func _on_ShootTimer_timeout():
 
 func _on_Ship_body_entered(body):
 	if body.is_in_group("Asteroids"):
+		emit_signal("died")
+		
+		var worldNode=get_tree().get_root().get_node("/root/World")
+		var explosion=Explosion.instance()
+		explosion.spawn(global_position)
+		worldNode.add_child(explosion)
 		queue_free() #if we hit an asteroid
 	pass
